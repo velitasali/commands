@@ -1,0 +1,33 @@
+name: Test & Publish
+
+on:
+  push: ~
+  pull_request: ~
+
+env:
+  npm_config_yes: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm install
+        name: Install NPM dependencies
+      - run: npx wasm-pack build
+        name: Build WASM
+      - run: npx webpack build
+        name: Build with Webpack
+      - run: npx wasm-pack test --firefox --headless
+        name: Run WASM tests
+      - run: cp public/* dist/
+        name: Prepare static files for GitHub Pages
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: dist # The folder the action should deploy.
