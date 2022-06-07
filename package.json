@@ -5,7 +5,7 @@
     "email": "me@velitasali.com",
     "url": "https://velitasali.com"
   },
-  "description": "A WebAssembly project with Rust.",
+  "description": "A personal website working in a CLI fashion",
   "version": "0.1.0",
   "license": "MIT License",
   "repository": {
@@ -25,7 +25,7 @@
     "serve": "npx webpack serve"
   },
   "dependencies": {
-    "libcommands": "file:./pkg"
+    "commands": "file:./pkg"
   },
   "devDependencies": {
     "eslint": "^8.16.0",
