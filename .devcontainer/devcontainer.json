@@ -30,10 +30,11 @@
 		"mutantdino.resourcemonitor",
 		"tamasfe.even-better-toml",
 		"serayuzgur.crates",
-		"rust-lang.rust",
 		"rust-lang.rust-analyzer",
 		"ms-vscode.vscode-typescript-next",
-		"dbaeumer.vscode-eslint"
+		"dbaeumer.vscode-eslint",
+		"GitHub.copilot",
+		"ms-vsliveshare.vsliveshare"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
