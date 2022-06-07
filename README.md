@@ -1,6 +1,6 @@
 # Commands
 
-A WebAssembly project with Rust and Typescript. Want a demo? 
+A personal website working in a CLI fashion. Want a demo? 
 <https://velitasali.github.io/commands>.
 
 ## Build
