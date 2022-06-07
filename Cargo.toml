@@ -2,27 +2,40 @@
 name = "commands"
 version = "0.1.0"
 authors = ["Veli Tasalı <me@velitasali.com>"]
-description = "A WebAssembly project with Rust"
+description = "A personal website working in a CLI fashion"
 license = "MIT License"
 edition = "2021"
 repository = "https://github.com/velitasali/commands.git"
 
 [lib]
-name = "libcommands"
+name = "commands"
 crate-type = ["cdylib", "rlib"]
 path = "src/lib.rs"
 
 [features]
-default = ["console_error_panic_hook"]
+default = ["console_error_panic_hook", "wee_alloc"]
 
 [dependencies]
+clap = { version = "3.1.18", features = ["derive"] }
 wasm-bindgen = "0.2.80"
+js-sys = "0.3.57"
 web-sys = { version = "0.3.57", features = [
+    "CanvasRenderingContext2d",
     "console",
     "Document",
+    "DomRectList",
     "Element",
+    "EventTarget",
+    "HtmlCanvasElement",
     "HtmlElement",
+    "HtmlInputElement",
+    "InputEvent",
+    "KeyEvent",
+    "KeyboardEvent",
     "Node",
+    "CssStyleDeclaration",
+    "TextMetrics",
+    "WheelEvent",
     "Window",
 ] }
 
@@ -39,13 +52,11 @@ console_error_panic_hook = { version = "0.1.7", optional = true }
 # Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
 wee_alloc = { version = "0.4.5", optional = true }
 
+lazy_static = "1.4.0"
+
 [dev-dependencies]
 wasm-bindgen-test = "0.3.30"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
-
-[[bin]]
-name = "commands"
-path = "src/bin.rs"
