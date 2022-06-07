@@ -8,7 +8,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules|pkg/,
       },
     ],
   },
@@ -16,15 +16,6 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   devServer: {
-    static: [
-      path.join(__dirname, 'pkg'),
-      path.join(__dirname, 'public'),
-    ],
-    watchFiles: [
-      'js/*',
-      'pkg/*.js',
-      'public/',
-    ],
     compress: true,
     port: 9000,
   },
