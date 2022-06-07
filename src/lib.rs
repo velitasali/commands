@@ -1,8 +1,25 @@
-mod utils;
+mod dom;
+mod event;
+mod history;
+mod program;
+mod render;
+mod scene;
+mod util;
 
 extern crate wasm_bindgen;
 
-use wasm_bindgen::prelude::*;
+use event::handler::oncanvaswheel;
+use lazy_static::lazy_static;
+use wasm_bindgen::{prelude::*, JsCast};
+use web_sys::{KeyboardEvent, WheelEvent};
+
+use crate::dom::Dom;
+use crate::event::handler::{onkeydown, onresize};
+
+const DEVELOPER_NAME: &str = "Veli Tasalı";
+const DEVELOPER_WEBSITE: &str = "https://velitasali.com";
+const DEVELOPER_EMAIL: &str = "me@velitasali.com";
+const PROJECT_REPOSITORY: &str = env!("CARGO_PKG_REPOSITORY");
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -10,30 +27,45 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
+lazy_static! {
+    static ref DOM: Dom = Dom::new();
 }
 
 #[wasm_bindgen]
-pub fn greet() {
-    alert(format!("Hello, {name}!", name = "Commands").as_str());
+pub fn commands_init() {
+    util::set_panic_hook();
+    util::console_log!("Hello from Rust WASM!");
+
+    self::setup_listeners();
+    self::dom().init();
 }
 
-#[wasm_bindgen]
-pub fn get_number() -> i32 {
-    42
+pub fn dom() -> &'static Dom {
+    &DOM
 }
 
-#[wasm_bindgen]
-pub fn run() {
-    utils::set_panic_hook();
-    web_sys::console::log_1(&JsValue::from("Hello from Rust WASM!"));
+fn setup_listeners() {
+    let dom = self::dom();
 
-    let window: web_sys::Window = web_sys::window().expect("no global `window` exists");
-    let document = window.document().expect("should have a document on window");
-    let body = document.body().expect("document should have a body");
-    let p: web_sys::Node = document.create_element("p").unwrap().into();
-    p.set_text_content(Some("Hello from Rust, WebAssembly, and Webpack!"));
-    body.append_child(&p).unwrap();
+    let keydown_listener = Closure::wrap(Box::new(|e: KeyboardEvent| {
+        onkeydown(e);
+    }) as Box<dyn FnMut(KeyboardEvent)>);
+
+    dom.canvas_input.set_onkeydown(Some(keydown_listener.as_ref().unchecked_ref()));
+    keydown_listener.forget();
+
+    let resize_listener = Closure::wrap(Box::new(|| {
+        onresize();
+    }) as Box<dyn FnMut()>);
+
+    dom.window.set_onresize(Some(resize_listener.as_ref().unchecked_ref()));
+    resize_listener.forget();
+
+    let wheel_listener = Closure::wrap(Box::new(|e: WheelEvent| {
+        oncanvaswheel(e);
+    }) as Box<dyn FnMut(WheelEvent)>);
+
+    dom.canvas.set_onwheel(Some(wheel_listener.as_ref().unchecked_ref()));
+
+    wheel_listener.forget();
 }
