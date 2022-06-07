@@ -42,5 +42,6 @@ pub fn onresize() {
 }
 
 pub fn oncanvaswheel(e: WheelEvent) {
+    e.prevent_default();
     dom().scene.borrow_mut().handle_wheel_event(e);
 }
